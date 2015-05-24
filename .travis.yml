@@ -47,7 +47,8 @@ install:
   - PATH=$PWD/bin:$PATH
   - PIP_INSTALL=bin/travis_pip_install
   - PIP_WHEELHOUSE=$PWD/wheelhouse
-  - echo $TOXENV | grep py27 && export PIP=pip || export PIP=pip3
+  - echo $TOXENV | grep py27 && PIP=pip || PIP=pip3
+  - echo $PIP
   - printf '#!/bin/bash -x\n' > $PIP_INSTALL
   - declare -f travis_retry >> $PIP_INSTALL
   - printf '\necho "=====\nUsing pip-wrapper for \"$@\"\n=====\n" >&2\n' >> $PIP_INSTALL
