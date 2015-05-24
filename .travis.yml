@@ -46,13 +46,11 @@ install:
   - PATH=$PWD/bin:$PATH
   - PIP_INSTALL=bin/travis_pip_install
   - PIP_WHEELHOUSE=$PWD/wheelhouse
+  - if echo $TOXENV | grep -q py27; then PIP=pip; else PIP=pip3; fi
   - printf '#!/bin/bash -x\n' > $PIP_INSTALL
   - declare -f travis_retry >> $PIP_INSTALL
   - printf '\necho "=====\nUsing pip-wrapper for \"$@\"\n=====\n" >&2\n' >> $PIP_INSTALL
-  - if echo $TOXENV | grep -q py27; then echo PIP=pip >> $PIP_INSTALL; else echo PIP=pip3 >> $PIP_INSTALL; fi
-  - $TOXENV | grep -q py27 && PIP=pip >> $PIP_INSTALL || PIP=pip3
-  - echo $PIP
-  - cat $PIP_INSTALL
+  - printf "\nPIP=$PIP" >> $PIP_INSTALL
   # Handle "pip install -e" for usedevelop from tox.
   - printf '\nif [ "$1" = "-e" ]; then $PIP install "$@"; exit $?; fi\n' >> $PIP_INSTALL
   # First try to install from wheelhouse.
