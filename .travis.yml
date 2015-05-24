@@ -49,6 +49,10 @@ install:
   - printf '\necho "=====\nUsing pip-wrapper for \"$@\"\n=====\n" >&2\n' >> $PIP_INSTALL
   # Handle "pip install -e" for usedevelop from tox.
   - printf '\nif [ "$1" = "-e" ]; then pip install "$@"; exit $?; fi\n' >> $PIP_INSTALL
+
+  # Installing autoslug from wheels fails on python 3
+  - printf '\nif ! pip freeze | grep -q autoslug; then pip install django-autoslug; exit $?; fi\n' >> $PIP_INSTALL
+
   # First try to install from wheelhouse.
   - printf "for i in \"\$@\"; do pip install --no-index --find-links=${PIP_WHEELHOUSE} \"\$i\"; done\n" >> $PIP_INSTALL
   # Then upgrade in case of outdated wheelhouse.
