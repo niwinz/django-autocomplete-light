@@ -45,17 +45,18 @@ install:
   - PATH=$PWD/bin:$PATH
   - PIP_INSTALL=bin/travis_pip_install
   - PIP_WHEELHOUSE=$PWD/wheelhouse
+  - echo $TOXENV | grep py27 && export PIP=pip || export PIP=pip3
   - printf '#!/bin/bash -x\n' > $PIP_INSTALL
   - declare -f travis_retry >> $PIP_INSTALL
   - printf '\necho "=====\nUsing pip-wrapper for \"$@\"\n=====\n" >&2\n' >> $PIP_INSTALL
   # Handle "pip install -e" for usedevelop from tox.
-  - printf '\nif [ "$1" = "-e" ]; then pip install "$@"; exit $?; fi\n' >> $PIP_INSTALL
+  - printf '\nif [ "$1" = "-e" ]; then $PIP install "$@"; exit $?; fi\n' >> $PIP_INSTALL
   # First try to install from wheelhouse.
-  - printf "for i in \"\$@\"; do pip install --no-index --find-links=${PIP_WHEELHOUSE} \"\$i\"; done\n" >> $PIP_INSTALL
+  - printf "for i in \"\$@\"; do $PIP install --no-index --find-links=${PIP_WHEELHOUSE} \"\$i\"; done\n" >> $PIP_INSTALL
   # Then upgrade in case of outdated wheelhouse.
-  - printf 'for i in "$@"; do travis_retry pip install --upgrade "$i"; done\n' >> $PIP_INSTALL
+  - printf 'for i in "$@"; do travis_retry $PIP install --upgrade "$i"; done\n' >> $PIP_INSTALL
   # ..and add the new/current wheels.
-  - printf "pip wheel --wheel-dir=${PIP_WHEELHOUSE} --find-links=${PIP_WHEELHOUSE} \"\$@\"\n" >> $PIP_INSTALL
+  - printf "$PIP wheel --wheel-dir=${PIP_WHEELHOUSE} --find-links=${PIP_WHEELHOUSE} \"\$@\"\n" >> $PIP_INSTALL
   - chmod +x $PIP_INSTALL
 
   # Adjust tox.ini.
@@ -74,7 +75,7 @@ install:
   - travis_pip_install tox
   - if [ -n "$EXTRAREQ" ]; then travis_pip_install $EXTRAREQ; fi
 
-  - pip freeze
+  - $PIP freeze
 before_script:
   - RUN_TESTS="tox -- autocomplete_light"
   # Run tests either with or without coverage (being installed).
