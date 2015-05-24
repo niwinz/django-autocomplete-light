@@ -39,6 +39,8 @@ env:
     - TOXENV=checkqa-python2
     - TOXENV=checkqa
 install:
+  - locale
+  - export LANG="en_US.UTF-8"
   # Create pip wrapper script, using travis_retry (a function) and
   # inject it into tox.ini.
   - mkdir -p bin
