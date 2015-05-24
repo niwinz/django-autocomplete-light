@@ -68,6 +68,8 @@ install:
   - cat $PIP_INSTALL
   - cat tox.ini
 
+  - pip install -U pip
+
   - travis_pip_install tox
   - if [ -n "$EXTRAREQ" ]; then travis_pip_install $EXTRAREQ; fi
 
