@@ -1,4 +1,4 @@
 # Requirements without Django, to work around https://github.com/pypa/pip/issues/2367.
 south
-hg+https://bitbucket.org/jpic/django-autoslug#egg=autoslug
+hg+https://bitbucket.org/jpic/django-autoslug#egg=django-autoslug
 django-cities-light
